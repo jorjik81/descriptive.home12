@@ -24,10 +24,11 @@ first_name varchar(30),
 last_name varchar(30),
 role_id int,
 manager_id int,
-foreign key (role_id)
+
+CONSTRAINT fk_roles foreign key (role_id)
 references roles(id)
 ON DELETE SET NULL,
-foreign key (manager_id) 
+CONSTRAINT fk_manager foreign key (manager_id) 
 references employee(id)
 on delete set null
 ); 
