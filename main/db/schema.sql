@@ -15,7 +15,7 @@ salary decimal,
 department_id int,
 foreign key (department_id)
 references department(id)
-ON DELETE CASCADE
+ON DELETE SET  NULL
 );
 
 create table employee(

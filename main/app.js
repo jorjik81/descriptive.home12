@@ -130,7 +130,7 @@ function startApp() {
       },
       {
         type: "input",
-        name: "flast_name",
+        name: "last_name",
         message: "Enter the employee's last name",
       },
       {
@@ -147,7 +147,7 @@ function startApp() {
          },
     ])
     .then(async( inquirerResponse) => {
-      console.log("Employee added: " + inquirer.response.first_name + " " + inquirerResponse.last_name);
+      console.log("Employee added: " + inquirerResponse.first_name + " " + inquirerResponse.last_name);
       
       let employeeName = inquirerResponse.first_name;
       let employeeLastName = inquirerResponse.last_name;
@@ -157,7 +157,7 @@ function startApp() {
       pool.query(
         `INSERT INTO
         employee(first_name, last_name, role_id, manager_id) VALUES
-        ('${employeename}', '${employeeLastName}', '${roleId})', '${managerId}')`,
+        ('${employeeName}', '${employeeLastName}', '${roleId}', '${managerId}')`,
         function (err, results){
           err
           ? console.log(err)
