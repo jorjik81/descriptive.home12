@@ -15,7 +15,7 @@ salary decimal,
 department_id int,
 foreign key (department_id)
 references department(id)
-ON DELETE SET NULL
+ON DELETE CASCADE
 );
 
 create table employee(
@@ -30,5 +30,5 @@ references roles(id)
 ON DELETE SET NULL,
 CONSTRAINT fk_manager foreign key (manager_id) 
 references employee(id)
-on delete set null
-); 
+ON DELETE SET NULL
+);

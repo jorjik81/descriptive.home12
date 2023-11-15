@@ -31,13 +31,13 @@ function startApp() {
       .prompt([
         {
           type: 'list',
-          name: 'openingmessage', // Change 'openingmessage' to 'action'
+          name: 'openingmessage', 
           message: 'What would you like to do?',
           choices: [
             'ViewAllEmployees',
             'ViewAllDepartments',
             'ViewAllRoles',
-            'AddEmployee', // Corrected 'AddEmployee' instead of 'AddRmployee'
+            'AddEmployee', 
             'AddDepartment',
             'AddRole',
             'UpdateEmployeeRole',
@@ -46,7 +46,7 @@ function startApp() {
         },
       ])
       .then((answer) => {
-        // Use 'answer.openingmessage' instead of 'answer.action'
+        
         console.log(answer.openingmessage); // Check the received input
         
         switch (answer.openingmessage) {
@@ -115,6 +115,104 @@ function startApp() {
         startApp();
     });
   };
+  const addEmployee = async () => {
+    // Fetch roles and managers from the database
+    const roles = await getRoles();
+    const managers = await getManagers();
+
+
+    inquirer.prompt
+    ([
+      {
+        type: "input",
+        name: "first_name",
+        message: "Enter the employee's first name",
+      },
+      {
+        type: "input",
+        name: "flast_name",
+        message: "Enter the employee's last name",
+      },
+      {
+           type: "input",
+           name: "role_id",
+           message: "Enter the role ID for the employee:",
+           choices: roles.map(role => ({ name: role.title, value: role.id})),
+         },
+         {
+           type: "input",
+           name: "manager_id",
+           message: "Enter the manager ID for the employee:",
+           choices: managers.map(manager => ({name: manager.first_name + " " + manager.last_name, value: manager.id})),
+         },
+    ])
+    .then(async( inquirerResponse) => {
+      console.log("Employee added: " + inquirer.response.first_name + " " + inquirerResponse.last_name);
+      
+      let employeeName = inquirerResponse.first_name;
+      let employeeLastName = inquirerResponse.last_name;
+      let roleId = inquirerResponse.role_id;
+      let managerId = inquirerResponse.manager_id;
+      
+      pool.query(
+        `INSERT INTO
+        employee(first_name, last_name, role_id, manager_id) VALUES
+        ('${employeename}', '${employeeLastName}', '${roleId})', '${managerId}')`,
+        function (err, results){
+          err
+          ? console.log(err)
+          : console.table(`Added ${employeeName} ${employeeLastName}!!!!`, results),
+          startApp();
+        }
+      );
+    });
+  }
+
+  const getRoles = () => {
+    return new Promise((resolve, reject) => {
+      pool.query('SELECT id, title FROM roles', (err, res) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      });
+    });
+  }
+  const getManagers = () => {
+    return new Promise((resolve,reject) => {
+      pool.query('SELECT id, first_name, last_name FROM employee', (err, res) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      });
+    });
+  }
+
+
+  //   .then((inquirerResponse) => {
+  //     console.log("Employee added: " + inquirerResponse.addEmployee);
+  //     let employeeName = inquirerResponse.addEmployee;
+  //     pool.query(
+  //       `INSERT INTO
+  //       employee(first_name) VALUES
+  //       ('${employeeName}')`,
+  //       function (err, results){
+  //         err
+  //         ? console.log(err)
+  //         : console.table(`Added ${employeeName}!!!!`, results),
+  //         startApp();
+  //       }
+  //       );
+  //   });
+  // }
+
+
+
+
+
 //   const addEmployee = () => {
 //     connection.query('INSERT INTO employee VALUES
 //     (id, first_name, last_name, role_id, manager_id), (err, res) => {
